@@ -10,4 +10,15 @@ public class AppDbContext : DbContext
 
     public DbSet<Invoice> Invoices { get; set; }
     public DbSet<Payment> Payments { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+{
+    modelBuilder.Entity<Invoice>()
+        .Property(i => i.Amount)
+        .HasPrecision(18, 2);
+
+    modelBuilder.Entity<Payment>()
+        .Property(p => p.Amount)
+        .HasPrecision(18, 2);
+}
 }
