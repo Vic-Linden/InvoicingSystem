@@ -9,4 +9,6 @@ public class Invoice
     public decimal Amount { get; set; }
     public DateTime DueDate { get; set; }
     public InvoiceStatus Status { get; set; } = InvoiceStatus.Unpaid;
+
+    public List<Payment> Payments { get; set; } = new();
 }
