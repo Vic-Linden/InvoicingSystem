@@ -21,4 +21,17 @@ public class InvoiceController : ControllerBase
     {
         return await _context.Invoices.ToListAsync();
     }
+
+    [HttpGet("{id}")]
+    public async Task<ActionResult<Invoice>> GetInvoice(int id)
+    {
+        var invoice = await _context.Invoices.FindAsync(id);
+
+        if (invoice == null)
+        {
+            return NotFound();
+        }
+
+        return invoice;
+    }
 }
