@@ -43,4 +43,18 @@ public class InvoiceController : ControllerBase
 
         return CreatedAtAction(nameof(invoice), new {id = invoice.Id}, invoice);
     }
+
+   [HttpPut("{id}")]
+   public async Task<IActionResult> UpdateInvoice(int id, Invoice invoice)
+    {
+        if(id != invoice.Id)
+        {
+            return BadRequest();
+        }
+
+        _context.Entry(invoice).State = EntityState.Modified;
+        await _context.SaveChangesAsync();
+
+        return NoContent();
+    }
 }
