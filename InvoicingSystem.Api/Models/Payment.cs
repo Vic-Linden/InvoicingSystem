@@ -7,5 +7,5 @@ public class Payment
     public DateTime PaymentDate { get; set; }
 
     public int InvoiceId { get; set; } //FK
-    public Invoice Invoice { get; set; } = null!;
+    public Invoice? Invoice { get; set; }
 }
