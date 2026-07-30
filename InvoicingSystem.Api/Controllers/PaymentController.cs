@@ -58,5 +58,19 @@ public class PaymentController : ControllerBase
         return NoContent();
     }
 
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeletePayment(int id)
+    {
+        var payment = await _context.Payments.FindAsync(id);
 
+        if(payment == null)
+        {
+            return NotFound();
+        }
+
+        _context.Payments.Remove(payment);
+        await _context.SaveChangesAsync();
+
+        return NoContent();
+    }
 }
