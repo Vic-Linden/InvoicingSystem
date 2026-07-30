@@ -57,4 +57,20 @@ public class InvoiceController : ControllerBase
 
         return NoContent();
     }
+
+  [HttpDelete("{id}")]
+  public async Task<IActionResult> DeleteInvoice(int id)
+    {
+        var invoice = await _context.Invoices.FindAsync(id);
+
+        if(invoice == null)
+        {
+            return NotFound();
+        }
+
+        _context.Invoices.Remove(invoice);
+        await _context.SaveChangesAsync();
+
+        return NoContent();
+    }
 }
