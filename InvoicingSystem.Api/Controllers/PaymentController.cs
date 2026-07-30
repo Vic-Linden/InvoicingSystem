@@ -21,4 +21,17 @@ public class PaymentController : ControllerBase
     {
         return await _context.Payments.ToListAsync();
     }
+
+    [HttpGet("{id}")]
+    public async Task<ActionResult<Payment>> GetPayment(int id)
+    {
+        var payment = await _context.Payments.FindAsync(id);
+
+        if(payment == null)
+        {
+            return NotFound();
+        }
+
+        return payment;
+    }
 }
