@@ -41,7 +41,7 @@ public class InvoiceController : ControllerBase
         _context.Invoices.Add(invoice);
         await _context.SaveChangesAsync();
 
-        return CreatedAtAction(nameof(UpdateInvoice), new {id = invoice.Id}, invoice);
+        return CreatedAtAction(nameof(GetInvoice), new {id = invoice.Id}, invoice);
     }
 
    [HttpPut("{id}")]
