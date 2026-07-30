@@ -6,7 +6,7 @@ using InvoicingSystem.Api.Models;
 namespace InvoicingSystem.Api.Controllers;
 
 [ApiController]
-[Route("api/controller")]
+[Route("api/[controller]")]
 public class PaymentController : ControllerBase
 {
     private readonly AppDbContext _context;
@@ -34,4 +34,29 @@ public class PaymentController : ControllerBase
 
         return payment;
     }
+
+    [HttpPost]
+    public async Task<ActionResult<Payment>> CreatePayment(Payment payment)
+    {
+        _context.Payments.Add(payment);
+        await _context.SaveChangesAsync();
+
+        return CreatedAtAction(nameof(GetPayment), new {id = payment.Id}, payment);
+    }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdatePayment(int id, Payment payment)
+    {
+        if(id != payment.Id)
+        {
+            return BadRequest();
+        }
+
+        _context.Entry(payment).State = EntityState.Modified;
+        await _context.SaveChangesAsync();
+
+        return NoContent();
+    }
+
+
 }
