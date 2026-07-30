@@ -34,4 +34,13 @@ public class InvoiceController : ControllerBase
 
         return invoice;
     }
+
+    [HttpPost]
+    public async Task<ActionResult<Invoice>> CreateInvoice (Invoice invoice)
+    {
+        _context.Invoices.Add(invoice);
+        await _context.SaveChangesAsync();
+
+        return CreatedAtAction(nameof(invoice), new {id = invoice.Id}, invoice);
+    }
 }
