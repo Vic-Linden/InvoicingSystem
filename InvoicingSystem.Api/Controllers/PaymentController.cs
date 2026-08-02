@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using InvoicingSystem.Api.Data;
 using InvoicingSystem.Api.Models;
+using InvoicingSystem.Api.Enums;
 
 namespace InvoicingSystem.Api.Controllers;
 
@@ -72,5 +73,34 @@ public class PaymentController : ControllerBase
         await _context.SaveChangesAsync();
 
         return NoContent();
+    }
+
+    private async Task UpdateInvoiceStatus(int invoiceId)
+    {
+        var invoice = await _context.Invoices  
+            .Include(i => i.Payments)
+            .FirstOrDefaultAsync(i => i.Id == invoiceId);
+
+        if (invoice == null)
+        {
+            return;
+        }
+
+        var totalPaid = invoice.Payments.Sum(p => p.Amount);
+
+        if(totalPaid >= invoice.Amount)
+        {
+            invoice.Status = InvoiceStatus.Paid;
+        }
+        else if(invoice.DueDate < DateTime.Now)
+        {
+            invoice.Status = InvoiceStatus.Overdue;
+        }
+        else
+        {
+            invoice.Status = InvoiceStatus.Unpaid;
+        }
+
+        await _context.SaveChangesAsync();
     }
 }
