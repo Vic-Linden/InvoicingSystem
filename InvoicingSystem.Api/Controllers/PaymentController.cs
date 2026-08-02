@@ -42,6 +42,8 @@ public class PaymentController : ControllerBase
         _context.Payments.Add(payment);
         await _context.SaveChangesAsync();
 
+        await UpdateInvoiceStatus(payment.InvoiceId);
+
         return CreatedAtAction(nameof(GetPayment), new {id = payment.Id}, payment);
     }
 
