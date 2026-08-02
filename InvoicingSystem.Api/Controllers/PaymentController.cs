@@ -39,6 +39,23 @@ public class PaymentController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<Payment>> CreatePayment(Payment payment)
     {
+        var invoice = await _context.Invoices
+            .Include(i => i.Payments)
+            .FirstOrDefaultAsync(i => i.Id == payment.InvoiceId);
+
+        if(invoice == null)
+        {
+            return BadRequest("Invoice not found");
+        }
+
+        var alreadyPaid = invoice.Payments.Sum(p => p.Amount);
+        var remaining = invoice.Amount - alreadyPaid;
+
+        if(payment.Amount > remaining)
+        {
+            return BadRequest($"Payment exceeds remaining balance of {remaining}.");
+        }
+
         _context.Payments.Add(payment);
         await _context.SaveChangesAsync();
 
